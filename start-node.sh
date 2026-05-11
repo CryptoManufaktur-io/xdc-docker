@@ -24,7 +24,7 @@ if [ -n "${SNAPSHOT_URL:-}" ] && [ ! -d "$DATA_DIR/XDC/chaindata" ]; then
     echo "==> Resuming previous download"
   fi
 
-  wget --tries=0 --continue --timeout=30 --read-timeout=30 -O xdcchain.tar "${SNAPSHOT_URL}"
+  wget -c -T 30 -O xdcchain.tar "${SNAPSHOT_URL}"
 
   echo "==> Extracting snapshot (this may take 1-2 hours)"
   tar -xvzf xdcchain.tar || tar -xvf xdcchain.tar
