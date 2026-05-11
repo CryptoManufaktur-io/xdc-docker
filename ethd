@@ -969,6 +969,11 @@ logs() {
 
 
 check_sync() {
+  set -a
+  # shellcheck disable=SC1091
+  source .env
+  set +a
+  
   ./scripts/check_sync.sh \
     --compose-service xdc \
     --local-rpc "http://127.0.0.1:${RPC_PORT:-8545}" \
