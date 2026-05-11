@@ -1,0 +1,17 @@
+# =============================================================================
+# Ext Network Overlay - Attach xdc to the external Traefik network
+# =============================================================================
+# Add :ext-network.yml to COMPOSE_FILE in .env to publish xdc via Traefik.
+# Traefik labels live in xdc.yml (matches tempo-docker / chainlink family).
+# =============================================================================
+
+services:
+  xdc:
+    networks:
+      - default
+      - ext-network
+
+networks:
+  ext-network:
+    external: true
+    name: ${DOCKER_EXT_NETWORK}

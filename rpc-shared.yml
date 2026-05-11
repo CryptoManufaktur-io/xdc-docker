@@ -1,0 +1,13 @@
+# =============================================================================
+# RPC Shared - Expose RPC and WS ports on localhost
+# =============================================================================
+# Add :rpc-shared.yml to COMPOSE_FILE in .env to expose XDC's HTTP/WS
+# on 127.0.0.1 (handy for local testing without Traefik).
+# P2P (30303) is published unconditionally by xdc.yml.
+# =============================================================================
+
+services:
+  xdc:
+    ports:
+      - "127.0.0.1:${RPC_PORT:-8545}:${RPC_PORT:-8545}"
+      - "127.0.0.1:${WS_PORT:-8546}:${WS_PORT:-8546}"
