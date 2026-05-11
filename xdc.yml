@@ -28,7 +28,8 @@ services:
       SNAPSHOT_URL: ${SNAPSHOT_URL:-}
       XDC_BOOTNODES: ${XDC_BOOTNODES:-}
       EXTRA_ARGS: ${EXTRA_ARGS:-}
-    command: ["/bin/bash", "/work/start-node.sh"]
+    entrypoint: ["/bin/bash"]
+    command: ["/work/start-node.sh"]
     ports:
       - ${P2P_PORT:-30303}:${P2P_PORT:-30303}/tcp
       - ${P2P_PORT:-30303}:${P2P_PORT:-30303}/udp
