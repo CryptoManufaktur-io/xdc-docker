@@ -1,6 +1,6 @@
 # XDC Docker
 
-Docker deployment for an [XDC Network](https://xdc.network/) Mainnet RPC node. 
+Docker deployment for an [XDC Network](https://xdc.network/) Mainnet RPC node.
 
 - **Network:** XDC Mainnet
 - **Chain ID:** `50` (`0x32`)
