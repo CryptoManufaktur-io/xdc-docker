@@ -40,7 +40,7 @@ services:
         fi
         echo "==> Downloading snapshot: $${SNAPSHOT_URL}"
         echo "==> This is a ~650GB file and may take several hours"
-        wget --tries=0 --timeout=120 --read-timeout=120 --progress=dot:mega -O xdcchain.tar "$${SNAPSHOT_URL}"
+        wget --tries=0 --continue --timeout=120 --read-timeout=120 --progress=dot:mega -O xdcchain.tar "$${SNAPSHOT_URL}"
         echo "==> Extracting snapshot (this may take 1-2 hours)"
         tar -xvzf xdcchain.tar || tar -xvf xdcchain.tar
         rm -f xdcchain.tar
@@ -65,9 +65,10 @@ services:
       RPC_PORT: ${RPC_PORT:-8545}
       WS_PORT: ${WS_PORT:-8546}
       GENESIS_URL: ${GENESIS_URL}
-      SNAPSHOT_URL: ${SNAPSHOT_URL:-}
       XDC_BOOTNODES: ${XDC_BOOTNODES:-}
       EXTRA_ARGS: ${EXTRA_ARGS:-}
+    entrypoint: ["/bin/bash", "/work/start.sh"]
+    command: []
     ports:
       - ${P2P_PORT:-30303}:${P2P_PORT:-30303}/tcp
       - ${P2P_PORT:-30303}:${P2P_PORT:-30303}/udp
