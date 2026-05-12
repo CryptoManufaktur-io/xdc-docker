@@ -18,7 +18,7 @@ services:
   # =============================================================================
   download:
     image: ${NODE_DOCKER_REPO}:${NODE_DOCKER_TAG}
-    profiles: ["download"]
+    restart: "no"
     user: root
     volumes:
       - xdc-data:/work/xdcchain
@@ -29,19 +29,17 @@ services:
     command:
       - |
         set -eu
-        if [ -z "$${SNAPSHOT_URL}" ]; then
-          echo "ERROR: SNAPSHOT_URL is empty"
-          echo "Set SNAPSHOT_URL in your .env file to use this service"
-          exit 1
-        fi
         if [ -d XDC/chaindata ]; then
           echo "==> chaindata already exists; skipping snapshot download"
           exit 0
         fi
+        if [ -z "$${SNAPSHOT_URL}" ]; then
+          echo "==> SNAPSHOT_URL is empty; skipping snapshot download"
+          exit 0
+        fi
         echo "==> Downloading snapshot: $${SNAPSHOT_URL}"
-        echo "==> This is a ~650GB file and may take several hours"
         wget --tries=0 --continue --timeout=120 --read-timeout=120 --progress=dot:mega -O xdcchain.tar "$${SNAPSHOT_URL}"
-        echo "==> Extracting snapshot (this may take 1-2 hours)"
+        echo "==> Extracting snapshot"
         tar -xvzf xdcchain.tar || tar -xvf xdcchain.tar
         rm -f xdcchain.tar
         rm -f XDC/nodekey
