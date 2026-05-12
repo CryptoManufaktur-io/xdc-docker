@@ -99,6 +99,9 @@ services:
       options:
         max-size: "100m"
         max-file: "3"
+    depends_on:
+      download:
+        condition: service_completed_successfully
 
 volumes:
   xdc-data:
