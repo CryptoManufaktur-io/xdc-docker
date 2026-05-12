@@ -38,7 +38,7 @@ services:
           exit 0
         fi
         echo "==> Downloading snapshot: $${SNAPSHOT_URL}"
-        wget --tries=0 --continue --timeout=120 --read-timeout=120 --progress=dot:mega -O xdcchain.tar "$${SNAPSHOT_URL}"
+        wget -c -T 120 -O xdcchain.tar "$${SNAPSHOT_URL}"
         echo "==> Extracting snapshot"
         tar -xvzf xdcchain.tar || tar -xvf xdcchain.tar
         rm -f xdcchain.tar
