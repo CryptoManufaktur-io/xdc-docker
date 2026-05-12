@@ -14,28 +14,6 @@ DATA_DIR="${WORK_DIR}/xdcchain"
 # Ensure data directory exists
 mkdir -p "${DATA_DIR}"
 
-# Download and extract snapshot if SNAPSHOT_URL is set and chaindata doesn't exist
-if [ -n "${SNAPSHOT_URL:-}" ] && [ ! -d "$DATA_DIR/XDC/chaindata" ]; then
-  echo "==> Downloading XDC snapshot from ${SNAPSHOT_URL}"
-  echo "==> This is a ~650GB file and may take several hours"
-  cd "$DATA_DIR"
-
-  if [ -f xdcchain.tar ]; then
-    echo "==> Resuming previous download"
-  fi
-
-  wget -c -T 30 -O xdcchain.tar "${SNAPSHOT_URL}"
-
-  echo "==> Extracting snapshot (this may take 1-2 hours)"
-  tar -xvzf xdcchain.tar || tar -xvf xdcchain.tar
-
-  rm -f xdcchain.tar
-  rm -f XDC/nodekey
-
-  echo "==> Snapshot extraction complete"
-  cd "${WORK_DIR}"
-fi
-
 # Download and initialize genesis if needed
 if [ ! -d "$DATA_DIR/XDC/chaindata" ]; then
   echo "==> Downloading genesis from ${GENESIS_URL}"

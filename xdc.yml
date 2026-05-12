@@ -7,6 +7,46 @@
 # =============================================================================
 
 services:
+  # =============================================================================
+  # One-shot snapshot download service
+  # =============================================================================
+  # Usage:
+  #   docker compose --profile download run --rm download
+  #
+  # This service runs once to download and extract the blockchain snapshot.
+  # It must be run BEFORE starting the main xdc service if using snapshots.
+  # =============================================================================
+  download:
+    image: ${NODE_DOCKER_REPO}:${NODE_DOCKER_TAG}
+    profiles: ["download"]
+    user: root
+    volumes:
+      - xdc-data:/work/xdcchain
+    working_dir: /work/xdcchain
+    environment:
+      SNAPSHOT_URL: ${SNAPSHOT_URL:-}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -eu
+        if [ -z "$${SNAPSHOT_URL}" ]; then
+          echo "ERROR: SNAPSHOT_URL is empty"
+          echo "Set SNAPSHOT_URL in your .env file to use this service"
+          exit 1
+        fi
+        if [ -d XDC/chaindata ]; then
+          echo "==> chaindata already exists; skipping snapshot download"
+          exit 0
+        fi
+        echo "==> Downloading snapshot: $${SNAPSHOT_URL}"
+        echo "==> This is a ~650GB file and may take several hours"
+        wget --tries=0 --timeout=120 --read-timeout=120 --progress=dot:mega -O xdcchain.tar "$${SNAPSHOT_URL}"
+        echo "==> Extracting snapshot (this may take 1-2 hours)"
+        tar -xvzf xdcchain.tar || tar -xvf xdcchain.tar
+        rm -f xdcchain.tar
+        rm -f XDC/nodekey
+        echo "==> Snapshot extraction complete"
+
   xdc:
     image: ${NODE_DOCKER_REPO}:${NODE_DOCKER_TAG}
     restart: unless-stopped
