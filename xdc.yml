@@ -50,7 +50,7 @@ services:
   xdc:
     image: ${NODE_DOCKER_REPO}:${NODE_DOCKER_TAG}
     restart: unless-stopped
-    stop_grace_period: 5m
+    stop_grace_period: 1m
     user: root
     volumes:
       - xdc-data:/work/xdcchain
@@ -93,7 +93,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 2m
+      start_period: 5m
     logging:
       driver: json-file
       options:
