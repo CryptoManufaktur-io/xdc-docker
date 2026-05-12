@@ -67,8 +67,6 @@ services:
       GENESIS_URL: ${GENESIS_URL}
       XDC_BOOTNODES: ${XDC_BOOTNODES:-}
       EXTRA_ARGS: ${EXTRA_ARGS:-}
-    entrypoint: ["/bin/bash", "/work/start.sh"]
-    command: []
     ports:
       - ${P2P_PORT:-30303}:${P2P_PORT:-30303}/tcp
       - ${P2P_PORT:-30303}:${P2P_PORT:-30303}/udp
