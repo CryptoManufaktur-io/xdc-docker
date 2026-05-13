@@ -16,6 +16,7 @@ services:
       - xdc-data:/work/xdcchain
       - ./start-node.sh:/work/start.sh:ro
       - /etc/localtime:/etc/localtime:ro
+      - ./enode.txt:/work/enode.txt:ro
     environment:
       NETWORK: ${NETWORK:-mainnet}
       SYNC_MODE: ${SYNC_MODE:-full}
@@ -29,6 +30,8 @@ services:
       XDC_BOOTNODES: ${XDC_BOOTNODES:-}
       EXTRA_ARGS: ${EXTRA_ARGS:-}
       RPC_VHOSTS: ${RPC_VHOSTS:-localhost}
+      MIN_PEERS: ${MIN_PEERS:-3}
+      PEER_INJECT_INTERVAL: ${PEER_INJECT_INTERVAL:-60}
     ports:
       - ${P2P_PORT:-30303}:${P2P_PORT:-30303}/tcp
       - ${P2P_PORT:-30303}:${P2P_PORT:-30303}/udp
