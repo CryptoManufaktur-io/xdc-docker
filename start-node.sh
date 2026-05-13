@@ -87,7 +87,7 @@ else
 fi
 
 # WebSocket configuration
-if [ "${ENABLE_WS:-false}" = "true" ]; then
+if [ "${ENABLE_WS:-true}" = "true" ]; then
   args+=(
     --ws
     --ws-addr "${WS_ADDR:-0.0.0.0}"
@@ -117,8 +117,8 @@ echo "==> RPC enabled: ${ENABLE_RPC:-true}"
 if [ "${ENABLE_RPC:-true}" = "true" ]; then
   echo "==> RPC address: ${RPC_ADDR:-0.0.0.0}:${RPC_PORT:-8545}"
 fi
-echo "==> WS enabled: ${ENABLE_WS:-false}"
-if [ "${ENABLE_WS:-false}" = "true" ]; then
+echo "==> WS enabled: ${ENABLE_WS:-true}"
+if [ "${ENABLE_WS:-true}" = "true" ]; then
   echo "==> WS address: ${WS_ADDR:-0.0.0.0}:${WS_PORT:-8546}"
 fi
 
