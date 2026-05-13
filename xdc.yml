@@ -10,7 +10,7 @@ services:
   xdc:
     image: ${NODE_DOCKER_REPO}:${NODE_DOCKER_TAG}
     restart: unless-stopped
-    stop_grace_period: 5m
+    stop_grace_period: 1m
     user: root
     volumes:
       - xdc-data:/work/xdcchain
@@ -28,27 +28,36 @@ services:
       SNAPSHOT_URL: ${SNAPSHOT_URL:-}
       XDC_BOOTNODES: ${XDC_BOOTNODES:-}
       EXTRA_ARGS: ${EXTRA_ARGS:-}
+      RPC_VHOSTS: ${RPC_VHOSTS:-localhost}
     ports:
       - ${P2P_PORT:-30303}:${P2P_PORT:-30303}/tcp
       - ${P2P_PORT:-30303}:${P2P_PORT:-30303}/udp
     labels:
       - traefik.enable=true
       - traefik.docker.network=${DOCKER_EXT_NETWORK}
-
+      - traefik.http.routers.${RPC_HOST}.service=${RPC_HOST}
       - traefik.http.routers.${RPC_HOST}.entrypoints=websecure
       - traefik.http.routers.${RPC_HOST}.rule=Host(`${RPC_HOST}.${DOMAIN}`)
       - traefik.http.routers.${RPC_HOST}.tls.certresolver=letsencrypt
-      - traefik.http.routers.${RPC_HOST}.service=${RPC_LB}
-      - traefik.http.services.${RPC_LB}.loadbalancer.server.port=${RPC_PORT:-8545}
-
+      - traefik.http.routers.${RPC_HOST}lb.service=${RPC_HOST}
+      - traefik.http.routers.${RPC_HOST}lb.entrypoints=websecure
+      - traefik.http.routers.${RPC_HOST}lb.rule=Host(`${RPC_LB}.${DOMAIN}`)
+      - traefik.http.routers.${RPC_HOST}lb.tls.certresolver=letsencrypt
+      - traefik.http.services.${RPC_HOST}.loadbalancer.server.port=${RPC_PORT:-8545}
+      - traefik.http.routers.${WS_HOST}.service=${WS_HOST}
       - traefik.http.routers.${WS_HOST}.entrypoints=websecure
       - traefik.http.routers.${WS_HOST}.rule=Host(`${WS_HOST}.${DOMAIN}`)
       - traefik.http.routers.${WS_HOST}.tls.certresolver=letsencrypt
-      - traefik.http.routers.${WS_HOST}.service=${WS_LB}
-      - traefik.http.services.${WS_LB}.loadbalancer.server.port=${WS_PORT:-8546}
-
-      - metrics.scrape=false
-      - metrics.network=${NETWORK:-mainnet}
+      - traefik.http.routers.${WS_HOST}lb.service=${WS_HOST}
+      - traefik.http.routers.${WS_HOST}lb.entrypoints=websecure
+      - traefik.http.routers.${WS_HOST}lb.rule=Host(`${WS_LB}.${DOMAIN}`)
+      - traefik.http.routers.${WS_HOST}lb.tls.certresolver=letsencrypt
+      - traefik.http.services.${WS_HOST}.loadbalancer.server.port=${WS_PORT:-8546}
+      - metrics.scrape=true
+      - metrics.path=/metrics
+      - metrics.port=26660
+      - metrics.instance=xdc
+      - metrics.network=${NETWORK}
     healthcheck:
       test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/${RPC_PORT:-8545}'"]
       interval: 30s
