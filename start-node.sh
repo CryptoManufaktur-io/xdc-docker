@@ -157,7 +157,7 @@ inject_peers() {
 XDC "${args[@]}" &
 XDC_PID=$!
 
-# shellcheck disable=SC2329 # invoked via trap
+# shellcheck disable=SC2317,SC2329 # invoked via trap
 shutdown() {
   echo "==> Received shutdown signal, stopping XDC"
   kill -TERM "${PEER_INJECT_PID:-}" 2>/dev/null || true
